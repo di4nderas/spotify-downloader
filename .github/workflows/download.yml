@@ -1,0 +1,26 @@
+name: Download Music
+
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: 'Link o nombre de la canción'
+        required: true
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar dependencias
+        run: |
+          sudo apt-get install -y ffmpeg
+          pip install spotdl
+
+      - name: Descargar música
+        run: spotdl download "${{ github.event.inputs.query }}"
+
+      - name: Subir MP3
+        uses: actions/upload-artifact@v4
+        with:
+          name: musica
+          path: "*.mp3"
